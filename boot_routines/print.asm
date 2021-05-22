@@ -24,6 +24,7 @@ print_string:
 		je finished
 		push ax
 		call print_char
+		pop ax
 		add si, 1
 		jmp loop
 	finished:

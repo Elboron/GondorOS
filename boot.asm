@@ -1,9 +1,10 @@
 [bits 16]
 
 section .boot_code
+call setup_print
 push boot_string
 call print_string
-
+jmp $
 %include "boot_routines/print.asm"
 times 5120 - ($ - $$) db 0
 
