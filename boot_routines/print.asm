@@ -1,8 +1,34 @@
 bits 16]
-setup_print:
+setup_write:
 	mov al, 0x02
 	mov ah, 0x0
 	int 0x10
+	ret
+
+setup_print:
+	;320x200 256 Color Graphics MVCGA, VGA
+	mov al, 0x13
+	mov ah, 0x0
+	int 0x10
+	ret
+
+draw_point:
+	;point_x, point_y, color
+	mov bx, sp
+	mov ah, 0xc
+	mov al, [bx + 2]
+	mov cx, [bx + 4]
+	mov dx, [bx + 6]
+	mov bh, 0
+	int 0x10
+	ret
+
+draw_line_v:
+	;start_x, start_y, end_y, color
+	ret
+
+draw_line_h:
+	;start_X, start_y, end_x, color
 	ret
 
 print_char:

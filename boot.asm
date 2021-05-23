@@ -1,9 +1,14 @@
 [bits 16]
 
 section .boot_code
+mov sp, 0xba00
 call setup_print
 push boot_string
 call print_string
+push 100
+push 100
+push 0x7
+call draw_point
 jmp $
 %include "boot_routines/print.asm"
 times 5120 - ($ - $$) db 0
@@ -15,8 +20,6 @@ times 5120 - ($ - $$) db 0
 section .boot0_code
 global _start
 _start:
-	mov sp, 0xba00
-	
 	mov ah, 2
 	mov al, 20
 	mov ch, 0
