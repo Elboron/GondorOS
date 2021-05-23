@@ -7,8 +7,9 @@ push boot_string
 call print_string
 push 100
 push 100
+push 200
 push 0x7
-call draw_point
+call draw_line_h
 jmp $
 %include "boot_routines/print.asm"
 times 5120 - ($ - $$) db 0

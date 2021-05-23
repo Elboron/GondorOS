@@ -15,21 +15,63 @@ setup_print:
 draw_point:
 	;point_x, point_y, color
 	mov bx, sp
+	push ax
+	push bx
+	push cx
+	push dx
 	mov ah, 0xc
 	mov al, [bx + 2]
 	mov cx, [bx + 4]
 	mov dx, [bx + 6]
 	mov bh, 0
 	int 0x10
+	pop dx
+	pop cx
+	pop bx
+	pop ax
 	ret
 
 draw_line_v:
 	;start_x, start_y, end_y, color
-	ret
+	mov bx, sp
+	draw_line_v_loop:
+		inc word [bx + 8]
+		push bx
+		push word [bx + 8]
+		push word [bx + 6]
+		push word [bx + 2]
+		call draw_point
+		pop ax
+		pop ax
+		pop ax
+		pop bx
+		mov ax, [bx + 4]
+		cmp ax, [bx + 8]
+		je draw_line_v_finished
+		jmp draw_line_v_loop
+	draw_line_v_finished:
+		ret
 
 draw_line_h:
-	;start_X, start_y, end_x, color
-	ret
+	;start_x, start_y, end_x, color
+	mov bx, sp
+	draw_line_h_loop:
+		inc word [bx + 6]
+		push bx
+		push word [bx + 8]
+		push word [bx + 6]
+		push word [bx + 2]
+		call draw_point
+		pop ax
+		pop ax
+		pop ax
+		pop bx
+		mov ax, [bx + 4]
+		cmp ax, [bx + 6]
+		je draw_line_h_finished
+		jmp draw_line_h_loop
+	draw_line_h_finished:
+		ret
 
 print_char:
 	push bx
