@@ -5,11 +5,12 @@ mov sp, 0xba00
 call setup_print
 push boot_string
 call print_string
-push 100
-push 100
-push 200
+push 50
+push 50
+push 150
+push 150
 push 0x7
-call draw_line_h
+call draw_square
 jmp $
 %include "boot_routines/print.asm"
 times 5120 - ($ - $$) db 0

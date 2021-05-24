@@ -21,8 +21,8 @@ draw_point:
 	push dx
 	mov ah, 0xc
 	mov al, [bx + 2]
-	mov cx, [bx + 4]
-	mov dx, [bx + 6]
+	mov cx, [bx + 6]
+	mov dx, [bx + 4]
 	mov bh, 0
 	int 0x10
 	pop dx
@@ -33,45 +33,80 @@ draw_point:
 
 draw_line_v:
 	;start_x, start_y, end_y, color
+	push bx
 	mov bx, sp
 	draw_line_v_loop:
 		inc word [bx + 8]
 		push bx
+		push word [bx + 10]
 		push word [bx + 8]
-		push word [bx + 6]
-		push word [bx + 2]
+		push word [bx + 4]
 		call draw_point
 		pop ax
 		pop ax
 		pop ax
 		pop bx
-		mov ax, [bx + 4]
+		mov ax, [bx + 6]
 		cmp ax, [bx + 8]
 		je draw_line_v_finished
 		jmp draw_line_v_loop
 	draw_line_v_finished:
+		pop bx
 		ret
 
 draw_line_h:
 	;start_x, start_y, end_x, color
+	push bx
 	mov bx, sp
 	draw_line_h_loop:
-		inc word [bx + 6]
+		inc word [bx + 10]
 		push bx
+		push word [bx + 10]
 		push word [bx + 8]
-		push word [bx + 6]
-		push word [bx + 2]
+		push word [bx + 4]
 		call draw_point
 		pop ax
 		pop ax
 		pop ax
 		pop bx
-		mov ax, [bx + 4]
-		cmp ax, [bx + 6]
+		mov ax, [bx + 6]
+		cmp ax, [bx + 10]
 		je draw_line_h_finished
 		jmp draw_line_h_loop
 	draw_line_h_finished:
+		pop bx
 		ret
+
+draw_square:
+	;start_x, start_y, end_x, end_y, color
+	mov bx, sp
+	
+	push word [bx + 10]
+	push word [bx + 8]
+	push word [bx + 4]
+	push word [bx + 2]
+	call draw_line_v
+
+	push word [bx + 6]
+	push word [bx + 8]
+	push word [bx + 4]
+	push word [bx + 2]
+	call draw_line_v
+
+	push word [bx + 10]
+	push word [bx + 8]
+	push word [bx + 6]
+	push word [bx + 2]
+	call draw_line_h
+
+	push word [bx + 10]
+	push word [bx + 4]
+	push word [bx + 6]
+	push word [bx + 2]
+	call draw_line_h
+
+	mov sp, bx
+	ret
 
 print_char:
 	push bx
