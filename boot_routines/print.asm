@@ -1,4 +1,4 @@
-bits 16]
+[bits 16]
 setup_write:
 	mov al, 0x02
 	mov ah, 0x0

@@ -24,8 +24,17 @@ push 5
 call move_cursor
 push reboot_string
 call print_string
+push 6
+push 4
+call move_cursor
+input_loop:
+	call wait_read_input
+	push eax
+	call print_char
+	jmp input_loop
 jmp $
 %include "boot_routines/print.asm"
+%include "boot_routines/keyboard.asm"
 times 5120 - ($ - $$) db 0
 
 section .boot_data
