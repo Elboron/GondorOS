@@ -112,6 +112,7 @@ print_char:
 	push bx
 	mov bx, sp
 	mov ax, [bx + 4]
+	mov bl, 3
 	mov ah, 0x0e
 	int 0x10
 	pop bx
@@ -132,3 +133,13 @@ print_string:
 		jmp loop
 	finished:
 		ret
+
+move_cursor:
+	;row(y), column(x)
+	mov bx, sp
+	mov ah, 0x2
+	mov dl, [bx + 2]
+	mov dh, [bx + 4]
+	mov bx, 0
+	int 0x10
+	ret
