@@ -31,6 +31,8 @@ input_loop:
 	call wait_read_input
 	cmp ax, 0x0f09
 	je proceed_tab
+	cmp ax, 0x1c0d
+	je proceed_enter
 	jmp input_loop
 	proceed_tab:
 		cmp byte [current_selected], -1
@@ -60,6 +62,13 @@ input_loop:
 		push selected_string
 		call print_string
 		jmp input_loop
+	proceed_enter:
+		cmp byte [current_selected], 1
+		je reboot
+		jmp input_loop
+	reboot:
+		lidt [0]
+		ud2
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
