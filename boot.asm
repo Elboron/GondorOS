@@ -29,9 +29,37 @@ push 4
 call move_cursor
 input_loop:
 	call wait_read_input
-	push eax
-	call print_char
+	cmp ax, 0x0f09
+	je proceed_tab
 	jmp input_loop
+	proceed_tab:
+		cmp byte [current_selected], -1
+		je render_select
+		mov ax, 4
+		add ax, [current_selected]
+		push ax
+		push 30
+		call move_cursor
+		push clear_select_string
+		call print_string
+		render_select:
+		mov al, [current_selected]
+		cmp al, [num_options]
+		je max_options
+		inc byte [current_selected]
+		jmp continue
+		max_options:
+			mov byte [current_selected], 0
+			jmp continue
+		continue:
+		mov ax, 4
+		add ax, [current_selected]
+		push ax
+		push 30
+		call move_cursor
+		push selected_string
+		call print_string
+		jmp input_loop
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
@@ -41,6 +69,10 @@ section .boot_data
 boot_string db "Preparing Osgiliath for the invasion", 0
 gondor_os_start_string db "Boot GondorOS", 0
 reboot_string db "Reboot your computer", 0
+selected_string db "SELECT", 0
+clear_select_string db "      ", 0
+num_options db 1
+current_selected db -1
 times 5120 - ($ - $$) db 0
 
 section .boot0_code
