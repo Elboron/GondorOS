@@ -1,7 +1,7 @@
 [bits 16]
 
 section .boot_code
-mov sp, 0xba00
+mov sp, 0x7bff
 call setup_print
 push 1
 push 1
@@ -65,14 +65,18 @@ input_loop:
 	proceed_enter:
 		cmp byte [current_selected], 1
 		je reboot
+		cmp byte [current_selected], 0
+		je boot_kernel
 		jmp input_loop
 	reboot:
 		lidt [0]
-		ud2
+		int 3
+	boot_kernel:
+		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
-times 5120 - ($ - $$) db 0
+times 1024 - ($ - $$) db 0
 
 section .boot_data
 boot_string db "Preparing Osgiliath for the invasion", 0
@@ -82,17 +86,27 @@ selected_string db "SELECT", 0
 clear_select_string db "      ", 0
 num_options db 1
 current_selected db -1
-times 5120 - ($ - $$) db 0
+times 1024 - ($ - $$) db 0
 
 section .boot0_code
 global _start
 _start:
 	mov ah, 2
-	mov al, 20
+	mov al, 4
 	mov ch, 0
 	mov cl, 2
 	mov dh, 0
 	mov bx, 0x7e0
+	mov es, bx
+	mov bx, 0
+	int 0x13
+
+	mov ah, 2
+	mov al, 40
+	mov ch, 0
+	mov cl, 6
+	mov dh, 0
+	mov bx, 0x860
 	mov es, bx
 	mov bx, 0
 	int 0x13
