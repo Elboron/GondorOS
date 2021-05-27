@@ -72,7 +72,7 @@ input_loop:
 		lidt [0]
 		int 3
 	boot_kernel:
-		call setup_print
+		call setup_write
 		cli
 		lgdt [gdtr]
 		mov eax, cr0
@@ -84,7 +84,6 @@ input_loop:
 		mov ds, [data_descriptor]
 		mov ss, [stack_descriptor]
 		mov esp, 0x0000ffff
-		xchg bx, bx
 		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
