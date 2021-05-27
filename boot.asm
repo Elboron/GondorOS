@@ -86,6 +86,44 @@ selected_string db "SELECT", 0
 clear_select_string db "      ", 0
 num_options db 1
 current_selected db -1
+
+;GLOBAL DESCRIPTOR TABLE
+gdt_start:
+;NULL descriptor
+dq 0
+;CODE Descriptor
+;G = 1, 4GB / 4KB = 1048576 => 0x100000
+dw 0x0000	;Segment Limit 0-15
+;Descriptor covers 0 -> 4GB => Basic Flat model
+dw 0x0	;Base Address 0-15
+db 0x0	;Base Address 16-23
+;Type: code segment, execute/read => 1010, S: Code/Data => 1, DPL: 00, P: Present in Memory => 1
+db 0b10011010	;Type(4), S(1), DPL(2), P(1)
+;SegLimit: 0x10 -> 0b10000, AVL: (0?), L: 32bit -> 0, D/B: D->32bit Addresses => 1, G: 4KB steps => 1
+db 0b11001111	;SegLimit(4), AVL(1), L(1), D/B(1), G(1)
+db 0x0	;Base Address 24-31
+;DATA Descriptor
+dw 0x0000
+dw 0x0
+db 0x0
+;Type: data segment, read/write => 0010
+db 0b10010010
+db 0b11001111
+db 0x0
+;STACK Descriptor
+dw 0x0000
+dw 0x0
+db 0x0
+;Type: data segment, read/write/expand down => 0110
+db 0b10010110
+db 0b11001111
+db 0x0
+
+gdt_descriptor:
+db 0
+dw gdt_start
+dw 24
+
 times 1024 - ($ - $$) db 0
 
 section .boot0_code
