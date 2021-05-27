@@ -72,23 +72,25 @@ input_loop:
 		lidt [0]
 		int 3
 	boot_kernel:
+		call setup_print
 		cli
-		lgdt [gdt_descriptor]
+		lgdt [gdtr]
 		mov eax, cr0
 		or al, 1
 		mov cr0, eax
 		jmp 0x8:load_registers
 		load_registers:
+		[bits 32]
 		mov ds, [data_descriptor]
-		mov cs, [code_descriptor]
 		mov ss, [stack_descriptor]
-		mov esp, 0xFFFFFFFF
+		mov esp, 0x0000ffff
 		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
 times 1024 - ($ - $$) db 0
 
+[bits 16]
 section .boot_data
 boot_string db "Preparing Osgiliath for the invasion", 0
 gondor_os_start_string db "Boot GondorOS", 0
@@ -99,11 +101,11 @@ num_options db 1
 current_selected db -1
 
 code_descriptor:
-dw 0x0020
+dw 0x0008
 data_descriptor:
-dw 0x0100
+dw 0x0010
 stack_descriptor:
-dw 0x0120
+dw 0x0018
 
 ;GLOBAL DESCRIPTOR TABLE
 gdt_start:
@@ -137,10 +139,11 @@ db 0b10010110
 db 0b11001111
 db 0x0
 
-gdt_descriptor:
-db 0
-dw gdt_start
-dw 24
+gdt_end:
+
+gdtr:
+dw gdt_end - gdt_start - 1
+dd gdt_start
 
 times 1024 - ($ - $$) db 0
 
