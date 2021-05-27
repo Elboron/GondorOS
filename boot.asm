@@ -72,6 +72,17 @@ input_loop:
 		lidt [0]
 		int 3
 	boot_kernel:
+		cli
+		lgdt [gdt_descriptor]
+		mov eax, cr0
+		or al, 1
+		mov cr0, eax
+		jmp 0x8:load_registers
+		load_registers:
+		mov ds, [data_descriptor]
+		mov cs, [code_descriptor]
+		mov ss, [stack_descriptor]
+		mov esp, 0xFFFFFFFF
 		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
@@ -86,6 +97,13 @@ selected_string db "SELECT", 0
 clear_select_string db "      ", 0
 num_options db 1
 current_selected db -1
+
+code_descriptor:
+dw 0x0020
+data_descriptor:
+dw 0x0100
+stack_descriptor:
+dw 0x0120
 
 ;GLOBAL DESCRIPTOR TABLE
 gdt_start:
