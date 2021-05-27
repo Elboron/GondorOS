@@ -84,6 +84,7 @@ input_loop:
 		mov ds, [data_descriptor]
 		mov ss, [stack_descriptor]
 		mov esp, 0x0000ffff
+		xchg bx, bx
 		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
@@ -113,7 +114,7 @@ gdt_start:
 dq 0
 ;CODE Descriptor
 ;G = 1, 4GB / 4KB = 1048576 => 0x100000
-dw 0x0000	;Segment Limit 0-15
+dw 0xFFFF	;Segment Limit 0-15
 ;Descriptor covers 0 -> 4GB => Basic Flat model
 dw 0x0	;Base Address 0-15
 db 0x0	;Base Address 16-23
@@ -123,7 +124,7 @@ db 0b10011010	;Type(4), S(1), DPL(2), P(1)
 db 0b11001111	;SegLimit(4), AVL(1), L(1), D/B(1), G(1)
 db 0x0	;Base Address 24-31
 ;DATA Descriptor
-dw 0x0000
+dw 0xFFFF
 dw 0x0
 db 0x0
 ;Type: data segment, read/write => 0010
@@ -131,7 +132,7 @@ db 0b10010010
 db 0b11001111
 db 0x0
 ;STACK Descriptor
-dw 0x0000
+dw 0xFFFF
 dw 0x0
 db 0x0
 ;Type: data segment, read/write/expand down => 0110
