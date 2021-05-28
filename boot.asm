@@ -82,8 +82,9 @@ input_loop:
 		load_registers:
 		[bits 32]
 		mov ds, [data_descriptor]
-		mov ss, [stack_descriptor]
-		mov esp, 0x0000ffff
+		mov ss, [data_descriptor]
+		mov esp, 0x80000
+		xchg bx, bx
 		jmp 0x8600
 jmp $
 %include "boot_routines/print.asm"
@@ -168,7 +169,6 @@ _start:
 	mov bx, 0
 	int 0x13
 
-	xchg bx, bx
 	jmp 0x7e00
 
 times 510 - ($ - $$) db 0

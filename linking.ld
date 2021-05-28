@@ -43,6 +43,7 @@ SECTIONS {
 
 	.kernel_code : 
 	{
+		*(.kernel_load)
 		*(.text)
 	} > KERNEL_CODE
 
