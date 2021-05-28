@@ -1,4 +1,7 @@
 [bits 16]
+
+section .boot_lib
+
 setup_write:
 	mov al, 0x02
 	mov ah, 0x0

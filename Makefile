@@ -7,6 +7,7 @@ AS = nasm
 
 ASFLAGS = -f elf
 CFLAGS = -m32 -Wall -g -fno-stack-protector -nostdinc
+#LDFLAGS = -melf_i386 -T linking.ld
 LDFLAGS = -melf_i386 --oformat binary -T linking.ld
 
 gondor_os: $(OBJS)

@@ -88,7 +88,6 @@ input_loop:
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
-times 1024 - ($ - $$) db 0
 
 [bits 16]
 section .boot_data
@@ -145,7 +144,6 @@ gdtr:
 dw gdt_end - gdt_start - 1
 dd gdt_start
 
-times 1024 - ($ - $$) db 0
 
 section .boot0_code
 global _start
@@ -170,6 +168,7 @@ _start:
 	mov bx, 0
 	int 0x13
 
+	xchg bx, bx
 	jmp 0x7e00
 
 times 510 - ($ - $$) db 0

@@ -17,17 +17,40 @@ SECTIONS {
 	.boot :
 	{
 		*(.boot_code)
-		*(.boot_data)	
+		*(.boot_lib)
+		*(.boot_data)
+	} > BOOT
+
+	.boot_fill :
+	{
+		FILL(0x00);
+		. = ORIGIN(BOOT) + LENGTH(BOOT) - 1;
+		BYTE(0xaa);
 	} > BOOT
 
 	.kernel_data :
 	{
 		*(.data)
+
+	} > KERNEL_DATA
+
+	.kernel_data_fill :
+	{
+		FILL(0x0);
+		. = ORIGIN(KERNEL_DATA) + LENGTH(KERNEL_DATA) - 1;
+		BYTE(0xaa);
 	} > KERNEL_DATA
 
 	.kernel_code : 
 	{
 		*(.text)
+	} > KERNEL_CODE
+
+	.kernel_code_fill :
+	{
+		FILL(0x0);
+		. = ORIGIN(KERNEL_CODE) + LENGTH(KERNEL_CODE) - 1;
+		BYTE(0xaa);
 	} > KERNEL_CODE
 
 	.kernel_bss :
