@@ -1,3 +1,6 @@
+#ifndef FRA_WRITE
+#define FRA_WRITE
+
 typedef enum    FRA_Color {
     Black   =   0x0,
     Blue    =   0x1,
@@ -26,11 +29,12 @@ extern FRA_Color FRA_bg_color;
 extern char*    FRA_video_address;
 
 
-void    FRA_set_color   (FRA_Color      fgColor, FRA_Color      bgColor);
+void    FRA_set_color (FRA_Color fgColor, FRA_Color bgColor);
 
-void    FRA_new_page    ();
+void    FRA_new_page ();
 
-void    FRA_fill        (FRA_Color      color);
+void    FRA_fill (FRA_Color color);
 
-int     FRA_write       (const char*    text);
+int     FRA_write (const char* text);
 
+#endif
