@@ -5,7 +5,7 @@ extern struct IDT_P_Descriptor* interrupt_descriptor_table;
 
 extern int IDT_P_entry_count;
 
-struct IDT_P_Descriptor {
+struct __attribute__((__packed__)) IDT_P_Descriptor {
 	/* Offset Bit 0 - 15 */
 	unsigned int offset : 16; 	
 	unsigned int segment_selector : 16; 
@@ -17,6 +17,11 @@ struct IDT_P_Descriptor {
 	unsigned int segment_present : 1;
 	/* Offset bit 16 - 31 */
 	unsigned int offset_high : 16;
+};
+
+struct __attribute__((__packed__)) IDT_P_Descriptor_Layout {
+	unsigned int size : 16;
+	unsigned long start : 32;
 };
 
 enum IDT_P_Gate_Type {

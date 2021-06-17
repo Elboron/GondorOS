@@ -32,6 +32,17 @@ void	add_descriptor (int index, struct IDT_P_Descriptor descriptor) {
 }
 
 void	load_idt () {
-
+	unsigned int idt_size = (unsigned int)IDT_P_entry_count * 8;
+	unsigned long idt_start = 0x100000;
+	volatile struct IDT_P_Descriptor_Layout layout = {0};
+	layout.size = idt_size;
+	layout.start = idt_start;
+	int address = (int)&layout;
+	asm("movl %0, %%eax\n\t"
+		"lidt (%%eax)"
+		:
+		: "b" (address)
+		: "eax"
+	);
 }
 
