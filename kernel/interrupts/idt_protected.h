@@ -1,6 +1,8 @@
 #ifndef IDT_PROTECTED
 #define IDT_PROTECTED
 
+#include "../framebuffer/write.h"
+
 extern struct IDT_P_Descriptor* interrupt_descriptor_table;
 
 extern int IDT_P_entry_count;
@@ -34,6 +36,28 @@ struct IDT_P_Descriptor	create_descriptor (int* offset, int segment_index, enum 
 
 void	add_descriptor (int index, struct IDT_P_Descriptor descriptor);
 
+void	increase_descriptor_count();
+
+void	init_idt ();
+
 void	load_idt ();
+
+void	divide_error ();
+
+void	default_exception ();
+
+void	overflow_error ();
+
+void	over_bound_range ();
+
+void 	invalid_opcode ();
+
+void	double_fault ();
+
+void	segment_not_present();
+
+void	stack_segment_fault ();
+
+void	control_protection ();
 
 #endif
