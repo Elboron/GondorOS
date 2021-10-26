@@ -2,7 +2,7 @@
 
 struct IDT_P_Descriptor* interrupt_descriptor_table = (struct IDT_P_Descriptor*) 0x100000;
 
-int IDT_P_entry_count = 0;
+int IDT_P_entry_count = 13;
 
 struct IDT_P_Descriptor	create_descriptor (int* offset, int segment_index, enum IDT_P_Gate_Type gate_type, int dpl, int segment_present) {
 	struct IDT_P_Descriptor tmp = {0};
@@ -22,7 +22,8 @@ struct IDT_P_Descriptor	create_descriptor (int* offset, int segment_index, enum 
 	tmp.dpl |= dpl;
 	tmp.segment_present |= segment_present;
 	/* Leave DPL and RPL 0 */
-	tmp.segment_selector |= (segment_index << 3) & 0b000;
+	tmp.segment_selector |= 0x8;
+	//tmp.segment_selector |= ((segment_index << 3) & 0b000);
 	return tmp;
 }
 
