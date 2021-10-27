@@ -27,12 +27,12 @@ struct IDT_P_Descriptor	create_descriptor (int* offset, int segment_index, enum 
 	return tmp;
 }
 
-void	add_descriptor (int index, struct IDT_P_Descriptor descriptor) {
+void	IDT_P_add_descriptor (int index, struct IDT_P_Descriptor descriptor) {
 	interrupt_descriptor_table[index] = descriptor;
 	++IDT_P_entry_count;
 }
 
-void	init_idt () {
+void	IDT_P_init_idt () {
 	struct IDT_P_Descriptor de = create_descriptor((int*)divide_error, 1, TRAP_GATE, 0, 1);
 	struct IDT_P_Descriptor oe = create_descriptor((int*)overflow_error, 1, TRAP_GATE, 0, 1);
 	struct IDT_P_Descriptor obr = create_descriptor((int*)over_bound_range, 1, TRAP_GATE, 0, 1);
@@ -43,31 +43,31 @@ void	init_idt () {
 	struct IDT_P_Descriptor cp = create_descriptor((int*)control_protection, 1, TRAP_GATE, 0, 1);
 	struct IDT_P_Descriptor default_f = create_descriptor((int*)default_exception, 1, TRAP_GATE, 0, 1);
 
-	add_descriptor(0, de);
-	add_descriptor(1, default_f);
-	increase_descriptor_count();
-	add_descriptor(3, default_f);
-	add_descriptor(4, oe);
-	add_descriptor(5, obr);
-	add_descriptor(6, io);
-	add_descriptor(7, default_f);
-	add_descriptor(8, df);
-	add_descriptor(9, default_f);
-	add_descriptor(10, default_f);
-	add_descriptor(11, snp);
-	add_descriptor(12, ssf);
-	add_descriptor(13, cp);
-	add_descriptor(14, default_f);
-	increase_descriptor_count();
-	add_descriptor(16, default_f);
-	add_descriptor(17, default_f);
-	add_descriptor(18, default_f);
-	add_descriptor(19, default_f);
-	add_descriptor(20, default_f);
-	add_descriptor(21, default_f);
+	IDT_P_add_descriptor(0, de);
+	IDT_P_add_descriptor(1, default_f);
+	IDT_P_increase_descriptor_count();
+	IDT_P_add_descriptor(3, default_f);
+	IDT_P_add_descriptor(4, oe);
+	IDT_P_add_descriptor(5, obr);
+	IDT_P_add_descriptor(6, io);
+	IDT_P_add_descriptor(7, default_f);
+	IDT_P_add_descriptor(8, df);
+	IDT_P_add_descriptor(9, default_f);
+	IDT_P_add_descriptor(10, default_f);
+	IDT_P_add_descriptor(11, snp);
+	IDT_P_add_descriptor(12, ssf);
+	IDT_P_add_descriptor(13, cp);
+	IDT_P_add_descriptor(14, default_f);
+	IDT_P_increase_descriptor_count();
+	IDT_P_add_descriptor(16, default_f);
+	IDT_P_add_descriptor(17, default_f);
+	IDT_P_add_descriptor(18, default_f);
+	IDT_P_add_descriptor(19, default_f);
+	IDT_P_add_descriptor(20, default_f);
+	IDT_P_add_descriptor(21, default_f);
 }
 
-void	load_idt () {
+void	IDT_P_load_idt () {
 	unsigned int idt_size = (unsigned int)IDT_P_entry_count * 8;
 	unsigned long idt_start = 0x100000;
 	volatile struct IDT_P_Descriptor_Layout layout = {0};
@@ -82,7 +82,7 @@ void	load_idt () {
 	);
 }
 
-void	increase_descriptor_count () {
+void	IDT_P_increase_descriptor_count () {
 	++IDT_P_entry_count;
 }
 
@@ -122,3 +122,11 @@ void	control_protection () {
 	FRA_write("Missing ENDBRANCH instruction\n");
 }
 
+void	print (char* error) {
+	FRA_new_page();
+	FRA_fill(Red);
+	FRA_set_color(White, Light_Magenta);
+	FRA_write("Processor encountered a critical error during execution:\n");
+	FRA_write(error);
+	FRA_write("Additional debugging info:\n");
+}

@@ -85,7 +85,7 @@ input_loop:
 		mov ss, [data_descriptor]
 		mov esp, 0x80000
 		xchg bx, bx
-		jmp 0x8600
+		jmp 0xb000
 jmp $
 %include "boot_routines/print.asm"
 %include "boot_routines/keyboard.asm"
@@ -150,7 +150,7 @@ section .boot0_code
 global _start
 _start:
 	mov ah, 2
-	mov al, 4
+	mov al, 5
 	mov ch, 0
 	mov cl, 2
 	mov dh, 0

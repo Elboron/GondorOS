@@ -34,13 +34,13 @@ enum IDT_P_Gate_Type {
 
 struct IDT_P_Descriptor	create_descriptor (int* offset, int segment_index, enum IDT_P_Gate_Type gate_type, int dpl, int segment_present);
 
-void	add_descriptor (int index, struct IDT_P_Descriptor descriptor);
+void	IDT_P_add_descriptor (int index, struct IDT_P_Descriptor descriptor);
 
-void	increase_descriptor_count();
+void	IDT_P_increase_descriptor_count();
 
-void	init_idt ();
+void	IDT_P_init_idt ();
 
-void	load_idt ();
+void	IDT_P_load_idt ();
 
 void	divide_error ();
 
@@ -59,5 +59,7 @@ void	segment_not_present();
 void	stack_segment_fault ();
 
 void	control_protection ();
+
+void	print (char* error);
 
 #endif

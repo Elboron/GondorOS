@@ -7,8 +7,8 @@ void kernel_main(void) {
 
 	const char boot_string[] = "Hello World!\nFOR GONDOR!\n\0";
 	
-	init_idt();
-	load_idt();
+	IDT_P_init_idt();
+	IDT_P_load_idt();
 
     	/* Clears the screen. */
     	FRA_new_page();
@@ -17,4 +17,8 @@ void kernel_main(void) {
     	FRA_fill(Cyan);
     	FRA_set_color(Magenta, Red);
 	return;
+}
+
+void after_print(void) {
+	FRA_write("Hell this is working\n");
 }
